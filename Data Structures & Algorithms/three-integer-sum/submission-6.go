@@ -1,18 +1,32 @@
-func twoSum(numbers []int, target int) []int {
-	left, right := 0, len(numbers)-1
+func threeSum(nums []int) [][]int {
+    sort.Ints(nums)
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
 
-	for left < right {
-		sum := numbers[left] + numbers[right]
-		if sum == target {
-			return []int{left+1, right+1}
-		}
+    var res [][]int
+    for i := 0; i < len(nums); i++ {
+        count[nums[i]]--
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
 
-		if sum < target {
-			left++
-		} else {
-			right--
-		}
-	}
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]--
+            if j > i+1 && nums[j] == nums[j-1] {
+                continue
+            }
+            target := -(nums[i] + nums[j])
+            if count[target] > 0 {
+                res = append(res, []int{nums[i], nums[j], target})
+            }
+        }
 
-	return nil
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]++
+        }
+    }
+
+    return res
 }
